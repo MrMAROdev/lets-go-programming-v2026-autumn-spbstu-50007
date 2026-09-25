@@ -6,15 +6,15 @@ func main() {
 	var argument1, argument2 int
 	var operat string
 
-	if _, err := fmt.Scan(&argument1); err != nil {
+	if _, exception := fmt.Scan(&argument1); exception != nil {
 		fmt.Println("Invalid first operand")
 		return
 	}
-	if _, err := fmt.Scan(&argument2); err != nil {
+	if _, exception := fmt.Scan(&argument2); exception != nil {
 		fmt.Println("Invalid second operand")
 		return
 	}
-	if _, err := fmt.Scan(&operat); err != nil {
+	if _, exception := fmt.Scan(&operat); exception != nil {
 		fmt.Println("Invalid operation")
 		return
 	}
