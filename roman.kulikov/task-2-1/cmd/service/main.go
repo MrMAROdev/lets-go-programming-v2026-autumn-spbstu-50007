@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 const (
-	low = 15
+	low  = 15
 	high = 30
 )
 
