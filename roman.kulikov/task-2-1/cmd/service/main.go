@@ -17,8 +17,9 @@ func process() {
 	minTemp := low
 	maxTemp := high
 
-	for i := 0; i < workers; i++ {
+	for range workers {
 		var operator string
+
 		var value int
 
 		if _, err := fmt.Scan(&operator, &value); err != nil {
@@ -51,7 +52,7 @@ func main() {
 		return
 	}
 
-	for i := 0; i < departments; i++ {
+	for range departments {
 		process()
 	}
 }
