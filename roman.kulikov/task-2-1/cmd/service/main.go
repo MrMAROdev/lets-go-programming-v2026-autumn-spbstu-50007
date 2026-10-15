@@ -1,56 +1,57 @@
 package main
 
-import (
-	"fmt"
-	"os"
-)
+import "fmt"
 
 const (
-	minTemperature = 15
-	maxTemperature = 30
+	low = 15
+	high = 30
 )
 
-func main() {
-	var departmentsCount int
-	if _, err := fmt.Scan(&departmentsCount); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+func process() {
+	var workers int
+
+	if _, err := fmt.Scan(&workers); err != nil {
 		return
 	}
 
-	for i := 0; i < departmentsCount; i++ {
-		var employeesCount int
-		if _, err := fmt.Scan(&employeesCount); err != nil {
-			fmt.Fprintln(os.Stderr, err)
+	minTemp := low
+	maxTemp := high
+
+	for i := 0; i < workers; i++ {
+		var operator string
+		var value int
+
+		if _, err := fmt.Scan(&operator, &value); err != nil {
 			return
 		}
 
-		low := minTemperature
-		high := maxTemperature
-
-		for j := 0; j < employeesCount; j++ {
-			var sign string
-			var temperatureValue int
-			if _, err := fmt.Scan(&sign, &temperatureValue); err != nil {
-				fmt.Fprintln(os.Stderr, err)
-				return
+		switch operator {
+		case ">=":
+			if value > minTemp {
+				minTemp = value
 			}
-
-			switch sign {
-			case ">=":
-				if temperatureValue > low {
-					low = temperatureValue
-				}
-			case "<=":
-				if temperatureValue < high {
-					high = temperatureValue
-				}
-			}
-
-			if low <= high {
-				fmt.Println(low)
-			} else {
-				fmt.Println(-1)
+		case "<=":
+			if value < maxTemp {
+				maxTemp = value
 			}
 		}
+
+		if minTemp <= maxTemp {
+			fmt.Println(minTemp)
+		} else {
+			fmt.Println(-1)
+		}
+	}
+}
+
+func main() {
+	var departments int
+
+	if _, err := fmt.Scan(&departments); err != nil {
+		return
+	}
+
+	for i := 0; i < departments; i++ {
+		process()
 	}
 }
