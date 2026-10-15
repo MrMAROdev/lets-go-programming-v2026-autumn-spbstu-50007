@@ -1,36 +1,48 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 const (
-	minTemp = 15
-	maxTemp = 30
+	minTemperature = 15
+	maxTemperature = 30
 )
 
 func main() {
-	var n int
-	fmt.Scan(&n)
+	var departmentsCount int
+	if _, err := fmt.Scan(&departmentsCount); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return
+	}
 
-	for i := 0; i < n; i++ {
-		var k int
-		fmt.Scan(&k)
+	for range departmentsCount {
+		var employeesCount int
+		if _, err := fmt.Scan(&employeesCount); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			return
+		}
 
-		low := minTemp
-		high := maxTemp
+		low := minTemperature
+		high := maxTemperature
 
-		for j := 0; j < k; j++ {
+		for range employeesCount {
 			var sign string
-			var vl int
-			fmt.Scan(&sign, &vl)
+			var temperatureValue int
+			if _, err := fmt.Scan(&sign, &temperatureValue); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				return
+			}
 
 			switch sign {
 			case ">=":
-				if vl > low {
-					low = vl
+				if temperatureValue > low {
+					low = temperatureValue
 				}
 			case "<=":
-				if vl < high {
-					high = vl
+				if temperatureValue < high {
+					high = temperatureValue
 				}
 			}
 
