@@ -1,3 +1,3 @@
 module github.com/MrMAR0dev/task-2
 
-go 1.27.1
+go 1.22
