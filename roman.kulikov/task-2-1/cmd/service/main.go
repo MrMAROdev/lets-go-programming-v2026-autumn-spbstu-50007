@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 const (
 	low  = 15
@@ -11,7 +14,8 @@ func process() {
 	var workers int
 
 	if _, err := fmt.Scan(&workers); err != nil {
-		return
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	minTemp := low
@@ -23,7 +27,8 @@ func process() {
 		var value int
 
 		if _, err := fmt.Scan(&operator, &value); err != nil {
-			return
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
 
 		switch operator {
@@ -49,7 +54,8 @@ func main() {
 	var departments int
 
 	if _, err := fmt.Scan(&departments); err != nil {
-		return
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	for range departments {
