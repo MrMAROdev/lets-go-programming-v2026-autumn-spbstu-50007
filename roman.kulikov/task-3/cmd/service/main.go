@@ -2,35 +2,40 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"sort"
 
-	"github.com/MrMAROdev/task-3/cfg"
-	"github.com/MrMAROdev/task-3/parse"
-	"github.com/MrMAROdev/task-3/save"
+	"github.com/MrMAROdev/task-3/cbr"
+	"github.com/MrMAROdev/task-3/config"
+	"github.com/MrMAROdev/task-3/output"
 )
 
-func main() {
+func run() error {
 	configPath := flag.String("config", "", "path to the YAML configuration file")
 	flag.Parse()
 
 	if *configPath == "" {
-		panic("main: -config flag is required")
+		return config.ErrEmptyPaths
 	}
 
-	config, err := cfg.Load(*configPath)
+	cfg, err := config.Load(*configPath)
 	if err != nil {
-		panic(fmt.Sprintf("main: %v", err))
+		return err
 	}
 
-	rates, err := parse.DecodeXML(config.InputFile)
+	rates, err := cbr.Parse(cfg.InputFile)
 	if err != nil {
-		panic(fmt.Sprintf("main: %v", err))
+		return err
 	}
 
-	sort.Slice(rates, func(i, j int) bool { return rates[i].Value > rates[j].Value })
+	sort.SliceStable(rates, func(i, j int) bool {
+		return rates[i].Value > rates[j].Value
+	})
 
-	if err := save.WriteJSON(config.OutputFile, rates); err != nil {
-		panic(fmt.Sprintf("main: %v", err))
+	return output.Write(cfg.OutputFile, rates)
+}
+
+func main() {
+	if err := run(); err != nil {
+		panic(err)
 	}
 }
