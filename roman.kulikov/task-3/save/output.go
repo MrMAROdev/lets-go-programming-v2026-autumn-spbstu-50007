@@ -1,4 +1,4 @@
-package save
+package output
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/MrMAROdev/task-3/parse"
+	"github.com/MrMAROdev/task-3/cbr"
 )
 
 const (
@@ -14,18 +14,18 @@ const (
 	filePerm = 0o644
 )
 
-func WriteJSON(path string, rates []parse.Currency) error {
+func Write(path string, rates []cbr.Rate) error {
 	data, err := json.MarshalIndent(rates, "", "    ")
 	if err != nil {
-		return fmt.Errorf("save.WriteJSON: %w", err)
+		return fmt.Errorf("output.Write: %w", err)
 	}
 
 	if err := os.MkdirAll(filepath.Dir(path), dirPerm); err != nil {
-		return fmt.Errorf("save.WriteJSON: %w", err)
+		return fmt.Errorf("output.Write: %w", err)
 	}
 
 	if err := os.WriteFile(path, data, filePerm); err != nil {
-		return fmt.Errorf("save.WriteJSON: %w", err)
+		return fmt.Errorf("output.Write: %w", err)
 	}
 
 	return nil
