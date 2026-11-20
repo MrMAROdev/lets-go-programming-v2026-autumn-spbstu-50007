@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/MrMAROdev/lets-go-programming-v2026-autumn-spbstu-50007/roman.kulikov/task-3/cbr"
+	"github.com/MrMAROdev/task-3/cbr"
 )
 
 const (
