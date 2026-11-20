@@ -39,13 +39,15 @@ func Parse(path string) ([]Rate, error) {
 	if err != nil {
 		return nil, fmt.Errorf("cbr.Parse: %w", err)
 	}
-	defer file.Close()
+
+	defer func() { _ = file.Close() }()
 
 	decoder := xml.NewDecoder(file)
 	decoder.CharsetReader = func(charset string, input io.Reader) (io.Reader, error) {
 		if strings.EqualFold(charset, "windows-1251") {
 			return charmap.Windows1251.NewDecoder().Reader(input), nil
 		}
+
 		return nil, fmt.Errorf("%w: %s", ErrUnsupported, charset)
 	}
 
@@ -59,8 +61,10 @@ func Parse(path string) ([]Rate, error) {
 	}
 
 	rates := make([]Rate, 0, len(root.Valutes))
+
 	for _, item := range root.Valutes {
 		numCode := 0
+
 		if trimmed := strings.TrimSpace(item.NumCode); trimmed != "" {
 			if n, err := strconv.Atoi(trimmed); err == nil {
 				numCode = n
@@ -68,6 +72,7 @@ func Parse(path string) ([]Rate, error) {
 		}
 
 		value := 0.0
+
 		if trimmed := strings.TrimSpace(item.Value); trimmed != "" {
 			if f, err := strconv.ParseFloat(strings.ReplaceAll(trimmed, ",", "."), 64); err == nil {
 				value = f
