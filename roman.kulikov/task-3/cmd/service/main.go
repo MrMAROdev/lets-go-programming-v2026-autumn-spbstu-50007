@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"sort"
 
 	"github.com/MrMAROdev/task-3/cbr"
