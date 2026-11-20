@@ -1,12 +1,14 @@
 package parse
 
 import (
-	"bytes"
 	"encoding/xml"
+	"io"
 	"os"
 	"sort"
 	"strconv"
 	"strings"
+
+	"golang.org/x/text/encoding/charmap"
 )
 
 type Valute struct {
@@ -27,22 +29,22 @@ type Currency struct {
 }
 
 func LoadAndSort(path string) []Currency {
-	raw, err := os.ReadFile(path)
+	f, err := os.Open(path)
 	if err != nil {
 		panic(err)
 	}
+	defer f.Close()
 
-	raw = bytes.ReplaceAll(raw, []byte("windows-1251"), []byte("utf-8"))
-
-	ascii := make([]byte, 0, len(raw))
-	for _, b := range raw {
-		if b < 0x80 {
-			ascii = append(ascii, b)
+	dec := xml.NewDecoder(f)
+	dec.CharsetReader = func(cs string, r io.Reader) (io.Reader, error) {
+		if strings.EqualFold(cs, "windows-1251") {
+			return charmap.Windows1251.NewDecoder().Reader(r), nil
 		}
+		return r, nil
 	}
 
 	var data ValuteData
-	if err := xml.Unmarshal(ascii, &data); err != nil {
+	if err := dec.Decode(&data); err != nil {
 		panic(err)
 	}
 
