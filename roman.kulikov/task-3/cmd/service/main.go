@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"sort"
 
 	"github.com/MrMAROdev/task-3/cbr"
@@ -19,19 +20,23 @@ func run() error {
 
 	cfg, err := config.Load(*configPath)
 	if err != nil {
-		return err
+		return fmt.Errorf("main: load config: %w", err)
 	}
 
 	rates, err := cbr.Parse(cfg.InputFile)
 	if err != nil {
-		return err
+		return fmt.Errorf("main: parse xml: %w", err)
 	}
 
 	sort.SliceStable(rates, func(i, j int) bool {
 		return rates[i].Value > rates[j].Value
 	})
 
-	return output.Write(cfg.OutputFile, rates)
+	if err := output.Write(cfg.OutputFile, rates); err != nil {
+		return fmt.Errorf("main: write json: %w", err)
+	}
+
+	return nil
 }
 
 func main() {
