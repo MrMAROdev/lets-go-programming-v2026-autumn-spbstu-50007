@@ -13,23 +13,24 @@ import (
 func main() {
 	configPath := flag.String("config", "", "path to the YAML configuration file")
 	flag.Parse()
+
 	if *configPath == "" {
 		panic("main: -config flag is required")
 	}
 
-	c, err := cfg.Load(*configPath)
+	config, err := cfg.Load(*configPath)
 	if err != nil {
 		panic(fmt.Sprintf("main: %v", err))
 	}
 
-	rates, err := parse.DecodeXML(c.InputFile)
+	rates, err := parse.DecodeXML(config.InputFile)
 	if err != nil {
 		panic(fmt.Sprintf("main: %v", err))
 	}
 
 	sort.Slice(rates, func(i, j int) bool { return rates[i].Value > rates[j].Value })
 
-	if err := save.WriteJSON(c.OutputFile, rates); err != nil {
+	if err := save.WriteJSON(config.OutputFile, rates); err != nil {
 		panic(fmt.Sprintf("main: %v", err))
 	}
 }

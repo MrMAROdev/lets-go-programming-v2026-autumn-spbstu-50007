@@ -19,11 +19,14 @@ func WriteJSON(path string, rates []parse.Currency) error {
 	if err != nil {
 		return fmt.Errorf("save.WriteJSON: %w", err)
 	}
+
 	if err := os.MkdirAll(filepath.Dir(path), dirPerm); err != nil {
 		return fmt.Errorf("save.WriteJSON: %w", err)
 	}
+
 	if err := os.WriteFile(path, data, filePerm); err != nil {
 		return fmt.Errorf("save.WriteJSON: %w", err)
 	}
+
 	return nil
 }
