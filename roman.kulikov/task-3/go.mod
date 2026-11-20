@@ -6,5 +6,3 @@ require (
 	golang.org/x/text v0.22.0
 	gopkg.in/yaml.v3 v3.0.1
 )
-
-replace github.com/MrMAROdev/task-3 v0.0.0 => ./
