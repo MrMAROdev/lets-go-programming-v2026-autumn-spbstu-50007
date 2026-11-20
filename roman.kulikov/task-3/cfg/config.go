@@ -1,12 +1,12 @@
 package config
 
 import (
-	"errors"
+	"encoding/json"
 	"fmt"
 	"os"
-	"strings"
+	"path/filepath"
 
-	"gopkg.in/yaml.v3"
+	"github.com/MrMAROdev/lets-go-programming-v2026-autumn-spbstu-50007/roman.kulikov/task-3/cbr"
 )
 
 var ErrEmptyPaths = errors.New("input-file and output-file must be non-empty")
