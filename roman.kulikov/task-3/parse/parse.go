@@ -1,13 +1,12 @@
 package parse
 
 import (
+	"bytes"
 	"encoding/xml"
 	"os"
 	"sort"
 	"strconv"
 	"strings"
-
-	"golang.org/x/net/html/charset"
 )
 
 type Valute struct {
@@ -28,17 +27,22 @@ type Currency struct {
 }
 
 func LoadAndSort(path string) []Currency {
-	f, err := os.Open(path)
+	raw, err := os.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
-	defer f.Close()
 
-	dec := xml.NewDecoder(f)
-	dec.CharsetReader = charset.NewReaderLabel
+	raw = bytes.ReplaceAll(raw, []byte("windows-1251"), []byte("utf-8"))
+
+	ascii := make([]byte, 0, len(raw))
+	for _, b := range raw {
+		if b < 0x80 {
+			ascii = append(ascii, b)
+		}
+	}
 
 	var data ValuteData
-	if err := dec.Decode(&data); err != nil {
+	if err := xml.Unmarshal(ascii, &data); err != nil {
 		panic(err)
 	}
 
