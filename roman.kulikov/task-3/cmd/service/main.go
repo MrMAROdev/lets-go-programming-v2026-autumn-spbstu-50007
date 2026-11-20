@@ -4,9 +4,9 @@ import (
 	"flag"
 	"sort"
 
-	"github.com/MrMAROdev/task-3/cbr"
-	"github.com/MrMAROdev/task-3/config"
-	"github.com/MrMAROdev/task-3/output"
+	"github.com/MrMAROdev/lets-go-programming-v2026-autumn-spbstu-50007/roman.kulikov/task-3/cbr"
+	"github.com/MrMAROdev/lets-go-programming-v2026-autumn-spbstu-50007/roman.kulikov/task-3/config"
+	"github.com/MrMAROdev/lets-go-programming-v2026-autumn-spbstu-50007/roman.kulikov/task-3/output"
 )
 
 func run() error {
