@@ -42,7 +42,7 @@ func LoadAndSort(path string) []Currency {
 		panic(err)
 	}
 
-	currencies := make([]model.Currency, 0, len(data.Valutes))
+	currencies := make([]Currency, 0, len(data.Valutes))
 	for _, v := range data.Valutes {
 		num, err := strconv.Atoi(v.NumCode)
 		if err != nil {
@@ -52,7 +52,7 @@ func LoadAndSort(path string) []Currency {
 		if err != nil {
 			continue
 		}
-		currencies = append(currencies, model.Currency{num, v.CharCode, val})
+		currencies = append(currencies, Currency{num, v.CharCode, val})
 	}
 
 	sort.Slice(currencies, func(i, j int) bool {
