@@ -42,17 +42,17 @@ func LoadAndSort(path string) []Currency {
 		panic(err)
 	}
 
-	currencies := make([]Currency, 0, len(data.Valutes))
+	currencies := make([]model.Currency, 0, len(data.Valutes))
 	for _, v := range data.Valutes {
 		num, err := strconv.Atoi(v.NumCode)
 		if err != nil {
-			panic(err)
+			continue
 		}
 		val, err := strconv.ParseFloat(strings.ReplaceAll(v.Value, ",", "."), 64)
 		if err != nil {
-			panic(err)
+			continue
 		}
-		currencies = append(currencies, Currency{num, v.CharCode, val})
+		currencies = append(currencies, model.Currency{num, v.CharCode, val})
 	}
 
 	sort.Slice(currencies, func(i, j int) bool {

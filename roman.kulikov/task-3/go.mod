@@ -1,6 +1,6 @@
 module github.com/MrMAROdev/task-3
 
-go 1.22
+go 1.21
 
 require (
 	golang.org/x/net v0.21.0
