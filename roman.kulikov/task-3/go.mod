@@ -1,4 +1,4 @@
-module github.com/MrMAROdev/task-3
+module github.com/MrMAROdev/lets-go-programming-v2026-autumn-spbstu-50007/roman.kulikov/task-3
 
 go 1.22
 
