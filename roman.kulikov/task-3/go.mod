@@ -7,4 +7,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 )
 
-replace github.com/MrMAROdev/task-3 => ./
+replace github.com/MrMAROdev/task-3 v0.0.0 => ./
