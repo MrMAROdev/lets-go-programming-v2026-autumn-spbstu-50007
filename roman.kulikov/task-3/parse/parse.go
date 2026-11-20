@@ -61,8 +61,10 @@ func DecodeXML(path string) ([]Currency, error) {
 	}
 
 	rates := make([]Currency, 0, len(root.Valutes))
+
 	for _, valute := range root.Valutes {
 		numCode := 0
+
 		if trimmed := strings.TrimSpace(valute.NumCode); trimmed != "" {
 			if n, e := strconv.Atoi(trimmed); e == nil {
 				numCode = n
@@ -70,6 +72,7 @@ func DecodeXML(path string) ([]Currency, error) {
 		}
 
 		value := 0.0
+
 		if trimmed := strings.TrimSpace(valute.Value); trimmed != "" {
 			if x, e := strconv.ParseFloat(strings.ReplaceAll(trimmed, ",", "."), 64); e == nil {
 				value = x
