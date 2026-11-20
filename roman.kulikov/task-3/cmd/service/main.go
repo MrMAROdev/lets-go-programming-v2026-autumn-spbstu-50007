@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"sort"
 
 	"github.com/MrMAROdev/task-3/cfg"
 	"github.com/MrMAROdev/task-3/parse"
@@ -9,16 +11,25 @@ import (
 )
 
 func main() {
-	cfgPath := flag.String("config", "config.yaml", "")
+	configPath := flag.String("config", "", "path to the YAML configuration file")
 	flag.Parse()
-
-	c := cfg.Load(*cfgPath)
-	parsed := parse.LoadAndSort(c.In)
-
-	currencies := make([]save.Currency, len(parsed))
-	for i, p := range parsed {
-		currencies[i] = save.Currency{NumCode: p.NumCode, CharCode: p.CharCode, Value: p.Value}
+	if *configPath == "" {
+		panic("main: -config flag is required")
 	}
 
-	save.ToJSON(currencies, c.Out)
+	c, err := cfg.Load(*configPath)
+	if err != nil {
+		panic(fmt.Sprintf("main: %v", err))
+	}
+
+	rates, err := parse.DecodeXML(c.InputFile)
+	if err != nil {
+		panic(fmt.Sprintf("main: %v", err))
+	}
+
+	sort.Slice(rates, func(i, j int) bool { return rates[i].Value > rates[j].Value })
+
+	if err := save.WriteJSON(c.OutputFile, rates); err != nil {
+		panic(fmt.Sprintf("main: %v", err))
+	}
 }

@@ -1,27 +1,31 @@
 package cfg
 
 import (
+	"errors"
+	"fmt"
 	"os"
 
-	"go.yaml.in/yaml/v3"
+	"gopkg.in/yaml.v3"
 )
 
+var errEmptyPaths = errors.New("input-file and output-file must be non-empty")
+
 type Config struct {
-	In  string `yaml:"input-file"`
-	Out string `yaml:"output-file"`
+	InputFile  string `yaml:"input-file"`
+	OutputFile string `yaml:"output-file"`
 }
 
-func Load(path string) Config {
+func Load(path string) (Config, error) {
 	raw, err := os.ReadFile(path)
 	if err != nil {
-		panic(err)
+		return Config{}, fmt.Errorf("cfg.Load: %w", err)
 	}
 	var c Config
 	if err := yaml.Unmarshal(raw, &c); err != nil {
-		panic(err)
+		return Config{}, fmt.Errorf("cfg.Load: %w", err)
 	}
-	if c.In == "" || c.Out == "" {
-		panic("config: input-file and output-file must be set")
+	if c.InputFile == "" || c.OutputFile == "" {
+		return Config{}, errEmptyPaths
 	}
-	return c
+	return c, nil
 }

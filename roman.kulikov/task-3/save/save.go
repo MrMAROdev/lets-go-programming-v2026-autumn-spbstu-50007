@@ -2,25 +2,28 @@ package save
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/MrMAROdev/task-3/parse"
 )
 
-type Currency struct {
-	NumCode  int     `json:"num_code"`
-	CharCode string  `json:"char_code"`
-	Value    float64 `json:"value"`
-}
+const (
+	dirPerm  = 0o755
+	filePerm = 0o644
+)
 
-func ToJSON(currencies []Currency, path string) {
-	out, err := json.MarshalIndent(currencies, "", "    ")
+func WriteJSON(path string, rates []parse.Currency) error {
+	data, err := json.MarshalIndent(rates, "", "    ")
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("save.WriteJSON: %w", err)
 	}
-	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
-		panic(err)
+	if err := os.MkdirAll(filepath.Dir(path), dirPerm); err != nil {
+		return fmt.Errorf("save.WriteJSON: %w", err)
 	}
-	if err := os.WriteFile(path, out, 0o644); err != nil {
-		panic(err)
+	if err := os.WriteFile(path, data, filePerm); err != nil {
+		return fmt.Errorf("save.WriteJSON: %w", err)
 	}
+	return nil
 }
