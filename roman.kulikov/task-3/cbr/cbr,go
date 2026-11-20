@@ -34,24 +34,20 @@ type xmlRoot struct {
 	Valutes []xmlValute `xml:"Valute"`
 }
 
-func windows1251Reader(charset string, input io.Reader) (io.Reader, error) {
-	if strings.EqualFold(charset, "windows-1251") {
-		return charmap.Windows1251.NewDecoder().Reader(input), nil
-	}
-
-	return nil, fmt.Errorf("%w: %s", ErrUnsupported, charset)
-}
-
 func Parse(path string) ([]Rate, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("cbr.Parse: %w", err)
 	}
-
-	defer func() { _ = file.Close() }()
+	defer file.Close()
 
 	decoder := xml.NewDecoder(file)
-	decoder.CharsetReader = windows1251Reader
+	decoder.CharsetReader = func(charset string, input io.Reader) (io.Reader, error) {
+		if strings.EqualFold(charset, "windows-1251") {
+			return charmap.Windows1251.NewDecoder().Reader(input), nil
+		}
+		return nil, fmt.Errorf("%w: %s", ErrUnsupported, charset)
+	}
 
 	var root xmlRoot
 	if err := decoder.Decode(&root); err != nil {
@@ -64,10 +60,24 @@ func Parse(path string) ([]Rate, error) {
 
 	rates := make([]Rate, 0, len(root.Valutes))
 	for _, item := range root.Valutes {
+		numCode := 0
+		if trimmed := strings.TrimSpace(item.NumCode); trimmed != "" {
+			if n, err := strconv.Atoi(trimmed); err == nil {
+				numCode = n
+			}
+		}
+
+		value := 0.0
+		if trimmed := strings.TrimSpace(item.Value); trimmed != "" {
+			if f, err := strconv.ParseFloat(strings.ReplaceAll(trimmed, ",", "."), 64); err == nil {
+				value = f
+			}
+		}
+
 		rates = append(rates, Rate{
-			NumCode:  toInt(item.NumCode),
+			NumCode:  numCode,
 			CharCode: strings.TrimSpace(item.CharCode),
-			Value:    toFloat(item.Value),
+			Value:    value,
 		})
 	}
 
@@ -76,30 +86,4 @@ func Parse(path string) ([]Rate, error) {
 	}
 
 	return rates, nil
-}
-
-func toInt(raw string) int {
-	trimmed := strings.TrimSpace(raw)
-	if trimmed == "" {
-		return 0
-	}
-
-	if n, err := strconv.Atoi(trimmed); err == nil {
-		return n
-	}
-
-	return 0
-}
-
-func toFloat(raw string) float64 {
-	trimmed := strings.TrimSpace(raw)
-	if trimmed == "" {
-		return 0
-	}
-
-	if f, err := strconv.ParseFloat(strings.ReplaceAll(trimmed, ",", "."), 64); err == nil {
-		return f
-	}
-
-	return 0
 }
