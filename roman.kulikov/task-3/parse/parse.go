@@ -32,26 +32,25 @@ func LoadAndSort(path string) []Currency {
 	if err != nil {
 		panic(err)
 	}
+	defer f.Close()
 
 	dec := xml.NewDecoder(f)
 	dec.CharsetReader = charset.NewReaderLabel
 
 	var data ValuteData
 	if err := dec.Decode(&data); err != nil {
-		f.Close()
 		panic(err)
 	}
-	f.Close()
 
 	currencies := make([]Currency, 0, len(data.Valutes))
 	for _, v := range data.Valutes {
 		num, err := strconv.Atoi(strings.TrimSpace(v.NumCode))
 		if err != nil {
-			continue
+			num = 0
 		}
 		val, err := strconv.ParseFloat(strings.ReplaceAll(strings.TrimSpace(v.Value), ",", "."), 64)
 		if err != nil {
-			continue
+			val = 0
 		}
 		currencies = append(currencies, Currency{num, strings.TrimSpace(v.CharCode), val})
 	}

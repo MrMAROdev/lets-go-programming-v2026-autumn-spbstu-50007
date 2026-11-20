@@ -12,17 +12,13 @@ func main() {
 	cfgPath := flag.String("config", "config.yaml", "")
 	flag.Parse()
 
-	config := cfg.Load(*cfgPath)
-	parsed := parse.LoadAndSort(config.In)
+	c := cfg.Load(*cfgPath)
+	parsed := parse.LoadAndSort(c.In)
 
 	currencies := make([]save.Currency, len(parsed))
-	for i, c := range parsed {
-		currencies[i] = save.Currency{
-			NumCode:  c.NumCode,
-			CharCode: c.CharCode,
-			Value:    c.Value,
-		}
+	for i, p := range parsed {
+		currencies[i] = save.Currency{NumCode: p.NumCode, CharCode: p.CharCode, Value: p.Value}
 	}
 
-	save.ToJSON(currencies, config.Out)
+	save.ToJSON(currencies, c.Out)
 }

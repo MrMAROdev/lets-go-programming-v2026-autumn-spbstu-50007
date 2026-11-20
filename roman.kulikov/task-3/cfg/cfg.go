@@ -16,15 +16,12 @@ func Load(path string) Config {
 	if err != nil {
 		panic(err)
 	}
-
-	var cfg Config
-	if err := yaml.Unmarshal(raw, &cfg); err != nil {
+	var c Config
+	if err := yaml.Unmarshal(raw, &c); err != nil {
 		panic(err)
 	}
-
-	if cfg.In == "" || cfg.Out == "" {
+	if c.In == "" || c.Out == "" {
 		panic("config: input-file and output-file must be set")
 	}
-
-	return cfg
+	return c
 }

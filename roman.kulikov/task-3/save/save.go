@@ -17,11 +17,9 @@ func ToJSON(currencies []Currency, path string) {
 	if err != nil {
 		panic(err)
 	}
-
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		panic(err)
 	}
-
 	if err := os.WriteFile(path, out, 0o644); err != nil {
 		panic(err)
 	}
