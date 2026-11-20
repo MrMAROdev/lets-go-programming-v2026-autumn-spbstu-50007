@@ -18,14 +18,20 @@ var (
 )
 
 type Rate struct {
-	NumCode  int     `json:"num_code" xml:"NumCode"`
-	CharCode string  `json:"char_code" xml:"CharCode"`
-	Value    float64 `json:"value" xml:"Value"`
+	NumCode  int     `json:"num_code"`
+	CharCode string  `json:"char_code"`
+	Value    float64 `json:"value"`
+}
+
+type xmlValute struct {
+	NumCode  string `xml:"NumCode"`
+	CharCode string `xml:"CharCode"`
+	Value    string `xml:"Value"`
 }
 
 type xmlRoot struct {
-	XMLName xml.Name `xml:"ValCurs"`
-	Valutes []Rate   `xml:"Valute"`
+	XMLName xml.Name    `xml:"ValCurs"`
+	Valutes []xmlValute `xml:"Valute"`
 }
 
 func windows1251Reader(charset string, input io.Reader) (io.Reader, error) {
