@@ -1,4 +1,4 @@
-module github.com/MrMAROdev/lets-go-programming-v2026-autumn-spbstu-50007/roman.kulikov/task-3
+module github.com/MrMAROdev/task-3
 
 go 1.22
 
@@ -6,3 +6,5 @@ require (
 	golang.org/x/text v0.22.0
 	gopkg.in/yaml.v3 v3.0.1
 )
+
+replace github.com/MrMAROdev/task-3 => ./
